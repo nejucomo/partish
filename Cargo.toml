@@ -2,6 +2,7 @@
 resolver = "3"
 members = [
   "cmux",
+  "composable",
   "debug-concise",
   "debug-rollup",
   "stosh",
