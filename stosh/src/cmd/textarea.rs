@@ -3,7 +3,6 @@ use derive_debug::Dbg;
 use derive_more::{Deref, DerefMut};
 use ratatui::style::Style;
 use ratatui::widgets::Widget;
-use ratatui_rseq::Renderable;
 
 use crate::handler::Handler;
 

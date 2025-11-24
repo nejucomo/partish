@@ -3,7 +3,6 @@ use crossterm::event::KeyCode::Enter;
 use crossterm::event::{KeyEvent, KeyModifiers};
 use ratatui::style::Styled as _;
 use ratatui::widgets::{Padding, Widget};
-use ratatui_rseq::Renderable;
 
 use crate::cmd::{Handle, TextArea};
 use crate::cuteblock::CuteBlock;

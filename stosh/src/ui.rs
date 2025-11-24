@@ -2,7 +2,6 @@ use crossterm::event::KeyEvent;
 use crossterm::event::{Event::Key, KeyCode, KeyEventKind::Press};
 use ratatui::style::{Style, Stylize as _};
 use ratatui::widgets::{Clear, Widget};
-use ratatui_rseq::{Renderable, RenderableSeq as _};
 
 use crate::event::{ControlMessage, InputEvent};
 use crate::exitdialog::ExitDialog;

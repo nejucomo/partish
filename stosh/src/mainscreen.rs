@@ -2,7 +2,6 @@ use ratatui::layout::Constraint::{Fill, Length};
 use ratatui::style::{Style, Stylize as _};
 use ratatui::text::Line;
 use ratatui::widgets::{Block, Borders, Widget};
-use ratatui_rseq::{Renderable, RenderableSeq as _};
 
 use crate::cmd;
 use crate::event::{ControlMessage, InputEvent};

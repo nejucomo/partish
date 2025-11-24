@@ -1,7 +1,6 @@
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
 use ratatui::widgets::Widget;
-use ratatui_rseq::Renderable;
 
 use crate::cmd;
 use crate::event::CommandEvent;

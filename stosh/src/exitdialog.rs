@@ -4,7 +4,6 @@ use ratatui::layout::{Constraint, Flex};
 use ratatui::style::{Style, Stylize as _};
 use ratatui::text::Line;
 use ratatui::widgets::{Block, BorderType, Clear, Padding, Widget};
-use ratatui_rseq::{Renderable, RenderableSeq as _};
 
 use crate::event::ControlMessage;
 use crate::handler::Handler;

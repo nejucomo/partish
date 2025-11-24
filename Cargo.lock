@@ -798,18 +798,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ratatui-rseq"
-version = "0.1.0"
-dependencies = [
- "debug-rollup",
- "derive-debug",
- "derive-new",
- "ratatui",
- "tracing",
- "tui-textarea",
-]
-
-[[package]]
 name = "redox_syscall"
 version = "0.5.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1016,7 +1004,6 @@ dependencies = [
  "futures",
  "portable-pty",
  "ratatui",
- "ratatui-rseq",
  "time",
  "tokio",
  "tokio-command-multiplexer",

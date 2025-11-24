@@ -6,7 +6,6 @@ use ratatui::layout::Rect;
 use ratatui::style::{Style, Styled as _};
 use ratatui::text::{Line, Text};
 use ratatui::widgets::{Block, Padding, Widget};
-use ratatui_rseq::{Renderable, RenderableSeq as _};
 
 use crate::cuteblock::CuteBlock;
 use crate::event::CommandEventInfo;
