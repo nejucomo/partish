@@ -1,10 +1,12 @@
 use crossterm::event::Event::{self as TerminalEvent, Key};
 use crossterm::event::KeyCode;
 use ratatui::buffer::Buffer;
-use ratatui::layout::{Constraint, Flex, Rect};
+use ratatui::layout::Direction::{Horizontal, Vertical};
+use ratatui::layout::{Flex::Center, Rect};
 use ratatui::style::{Style, Stylize as _};
 use ratatui::text::Line;
 use ratatui::widgets::{Block, BorderType, Clear, Padding, Widget};
+use ratatui_composable::shelf::Shelf;
 
 use crate::event::ControlMessage;
 use crate::handler::Handler;
