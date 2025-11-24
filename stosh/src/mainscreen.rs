@@ -1,9 +1,11 @@
 use ratatui::buffer::Buffer;
 use ratatui::layout::Constraint::{Fill, Length};
-use ratatui::layout::Rect;
+use ratatui::layout::{Direction::Vertical, Rect};
 use ratatui::style::{Style, Stylize as _};
 use ratatui::text::Line;
 use ratatui::widgets::{Block, Borders, Widget};
+use ratatui_composable::WidgetExt as _;
+use ratatui_composable::shelf::{Shelf, Shelving as _};
 
 use crate::cmd;
 use crate::event::{ControlMessage, InputEvent};
@@ -41,15 +43,15 @@ impl Handler<InputEvent> for MainScreen {
 
 impl Widget for &MainScreen {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        Block::new()
-            .title_top(Line::from("stosh").light_green().right_aligned())
-            .borders(Borders::TOP)
-            .border_style(Style::new().green())
-            .then(
-                self.input
-                    .constrained(Length(self.input.height().into_u16()))
-                    .on_top()
-                    .followed_by(self.stack.constrained(Fill(1))),
+        Shelf::new(Vertical)
+            .stack(Length(self.input.height().into_u16()), &self.input)
+            .stack(Fill(1), &self.stack)
+            .within_block(
+                Block::new()
+                    .title_top(Line::from("stosh").light_green().right_aligned())
+                    .borders(Borders::TOP)
+                    .border_style(Style::new().green()),
             )
+            .render(area, buf)
     }
 }
