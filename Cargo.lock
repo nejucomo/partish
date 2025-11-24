@@ -926,6 +926,10 @@ dependencies = [
 [[package]]
 name = "ratatui-composable"
 version = "0.1.0"
+dependencies = [
+ "derive-new",
+ "ratatui",
+]
 
 [[package]]
 name = "redox_syscall"
@@ -1135,6 +1139,7 @@ dependencies = [
  "portable-pty",
  "rat-salsa",
  "ratatui",
+ "ratatui-composable",
  "throbber-widgets-tui",
  "time",
  "tokio",

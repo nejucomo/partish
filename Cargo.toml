@@ -28,6 +28,7 @@ pin-project = "1.1.10"
 portable-pty = "0.9.0"
 rat-salsa = "2.5.0"
 ratatui = "0.29.0"
+ratatui-composable = { path = "composable" }
 regex = "1.12.2"
 stosh = { path = "stosh" }
 test-case = "3.3.1"

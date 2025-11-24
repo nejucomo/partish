@@ -39,19 +39,16 @@ impl Widget for ExitDialog {
         let width = (line.width() + 6).into_u16();
         let height = 5;
 
-        (
-            Clear,
-            Block::bordered()
-                .border_type(BorderType::Double)
-                .padding(Padding::symmetric(2, 1))
-                .style(Style::reset().on_blue()),
-        )
-            .then(line)
-            .constrained(Constraint::Length(width))
-            .on_left()
-            .flex(Flex::Center)
-            .constrained(Constraint::Length(height))
-            .on_top()
-            .flex(Flex::Center)
+        Clear.render(area, buf);
+
+        Shelf::new(Vertical)
+            .flex(Center)
+            .stack(Shelf::new(Horizontal).flex(Center).stack(line))
+            .within_block(
+                Block::bordered()
+                    .border_type(BorderType::Double)
+                    .padding(Padding::symmetric(2, 1))
+                    .style(Style::reset().on_blue()),
+            )
     }
 }

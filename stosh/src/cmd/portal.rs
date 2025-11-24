@@ -6,6 +6,7 @@ use ratatui::layout::Rect;
 use ratatui::style::{Style, Styled as _};
 use ratatui::text::{Line, Text};
 use ratatui::widgets::{Block, Padding, Widget};
+use ratatui_composable::WidgetExt as _;
 
 use crate::cuteblock::CuteBlock;
 use crate::event::CommandEventInfo;
@@ -152,21 +153,20 @@ impl Widget for &Portal {
         let (hinput, houtput) = self.render_heights(area.height);
         let out_skip = self.output.len() - houtput;
 
-        block
-            .then(Text::from_iter(
-                self.input
-                    .iter()
-                    .take(hinput)
-                    .cloned()
-                    .map(|line| line.set_style(STYLES.text.input))
-                    .chain(self.output.iter().skip(out_skip).map(|(src, line)| {
-                        line.to_string().set_style(match src {
-                            Stdout => STYLES.text.stdout,
-                            Stderr => STYLES.text.stderr,
-                        })
-                    })),
-            ))
-            .into_widget()
-            .render(area, buf);
+        Text::from_iter(
+            self.input
+                .iter()
+                .take(hinput)
+                .cloned()
+                .map(|line| line.set_style(STYLES.text.input))
+                .chain(self.output.iter().skip(out_skip).map(|(src, line)| {
+                    line.to_string().set_style(match src {
+                        Stdout => STYLES.text.stdout,
+                        Stderr => STYLES.text.stderr,
+                    })
+                })),
+        )
+        .within_block(block)
+        .render(area, buf);
     }
 }
