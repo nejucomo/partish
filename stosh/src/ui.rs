@@ -1,5 +1,7 @@
 use crossterm::event::KeyEvent;
 use crossterm::event::{Event::Key, KeyCode, KeyEventKind::Press};
+use ratatui::buffer::Buffer;
+use ratatui::layout::Rect;
 use ratatui::style::{Style, Stylize as _};
 use ratatui::widgets::{Clear, Widget};
 
@@ -40,8 +42,8 @@ impl Handler<InputEvent> for UI {
     }
 }
 
-impl Renderable for &UI {
-    fn into_widget(self) -> impl Widget {
+impl Widget for &UI {
+    fn render(self, area: Rect, buf: &mut Buffer) {
         (Clear, Style::reset().gray().on_black())
             .then(&self.ms)
             .then(self.exitdialog)

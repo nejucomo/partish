@@ -1,4 +1,6 @@
+use ratatui::buffer::Buffer;
 use ratatui::layout::Constraint::{Fill, Length};
+use ratatui::layout::Rect;
 use ratatui::style::{Style, Stylize as _};
 use ratatui::text::Line;
 use ratatui::widgets::{Block, Borders, Widget};
@@ -37,8 +39,8 @@ impl Handler<InputEvent> for MainScreen {
     }
 }
 
-impl Renderable for &MainScreen {
-    fn into_widget(self) -> impl Widget {
+impl Widget for &MainScreen {
+    fn render(self, area: Rect, buf: &mut Buffer) {
         Block::new()
             .title_top(Line::from("stosh").light_green().right_aligned())
             .borders(Borders::TOP)

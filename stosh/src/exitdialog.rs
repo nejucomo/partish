@@ -1,6 +1,7 @@
 use crossterm::event::Event::{self as TerminalEvent, Key};
 use crossterm::event::KeyCode;
-use ratatui::layout::{Constraint, Flex};
+use ratatui::buffer::Buffer;
+use ratatui::layout::{Constraint, Flex, Rect};
 use ratatui::style::{Style, Stylize as _};
 use ratatui::text::Line;
 use ratatui::widgets::{Block, BorderType, Clear, Padding, Widget};
@@ -32,8 +33,8 @@ impl Handler<TerminalEvent> for ExitDialog {
     }
 }
 
-impl Renderable for ExitDialog {
-    fn into_widget(self) -> impl Widget {
+impl Widget for ExitDialog {
+    fn render(self, area: Rect, buf: &mut Buffer) {
         let line = Line::from("Exit? y/n").bold().white();
         let width = (line.width() + 6).into_u16();
         let height = 5;

@@ -1,6 +1,8 @@
 use crossterm::event::Event::{self, Key};
 use crossterm::event::KeyCode::Enter;
 use crossterm::event::{KeyEvent, KeyModifiers};
+use ratatui::buffer::Buffer;
+use ratatui::layout::Rect;
 use ratatui::style::Styled as _;
 use ratatui::widgets::{Padding, Widget};
 
@@ -46,8 +48,8 @@ impl Default for Input {
     }
 }
 
-impl Renderable for &Input {
-    fn into_widget(self) -> impl Widget {
+impl Widget for &Input {
+    fn render(self, area: Rect, buf: &mut Buffer) {
         let st = STYLES.text.histix;
 
         CuteBlock::bordered()
@@ -56,6 +58,7 @@ impl Renderable for &Input {
             .border_style(STYLES.border.input.style)
             .border_type(STYLES.border.input.btype)
             .padding(Padding::horizontal(1))
+            .render(area, buf);
     }
 }
 

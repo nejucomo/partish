@@ -145,12 +145,6 @@ impl Handler<CommandEventInfo> for Portal {
     }
 }
 
-impl Renderable for &Portal {
-    fn into_widget(self) -> impl Widget {
-        self
-    }
-}
-
 impl Widget for &Portal {
     fn render(self, area_outer: Rect, buf: &mut Buffer) {
         let block = Block::from(self.get_cute_block());

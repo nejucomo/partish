@@ -4,7 +4,6 @@ use std::ffi::OsStr;
 use crossterm::event::EventStream;
 use derive_debug::Dbg;
 use futures::{StreamExt as _, stream};
-use ratatui_rseq::TerminalSession;
 use tokio::process::Command;
 use tokio_command_multiplexer::CommandMultiplexer;
 

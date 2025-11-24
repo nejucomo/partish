@@ -27,12 +27,6 @@ impl Handler<CommandEvent> for Stack {
     }
 }
 
-impl Renderable for &Stack {
-    fn into_widget(self) -> impl Widget {
-        self
-    }
-}
-
 impl Widget for &Stack {
     #[tracing::instrument(skip(buf))]
     fn render(self, mut area: Rect, buf: &mut Buffer) {
@@ -57,7 +51,7 @@ impl Widget for &Stack {
                 tracing::warn!(?area.height, ?subarea.height, ?remaining.height, "empty areas in stack layout");
             }
 
-            portal.into_widget().render(subarea, buf);
+            portal.render(subarea, buf);
             area = remaining;
         }
     }
