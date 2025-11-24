@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
 use ratatui::buffer::Buffer;
-use ratatui::layout::{Constraint, Rect};
+use ratatui::layout::{Constraint, Layout, Rect};
 use ratatui::widgets::Widget;
 
 use crate::shelf::Shelving;
@@ -35,6 +35,17 @@ where
     S: Shelving,
     W: Widget,
 {
+    fn map_layout<F>(self, f: F) -> Self
+    where
+        F: FnOnce(Layout) -> Layout,
+    {
+        Shelved {
+            ix: self.ix,
+            sh: self.sh.map_layout(f),
+            w: self.w,
+        }
+    }
+
     fn append_constraint(&mut self, constraint: Constraint) -> usize {
         self.sh.append_constraint(constraint)
     }

@@ -1,12 +1,14 @@
 use crossterm::event::Event::{self as TerminalEvent, Key};
 use crossterm::event::KeyCode;
 use ratatui::buffer::Buffer;
+use ratatui::layout::Constraint::Length;
 use ratatui::layout::Direction::{Horizontal, Vertical};
 use ratatui::layout::{Flex::Center, Rect};
 use ratatui::style::{Style, Stylize as _};
 use ratatui::text::Line;
 use ratatui::widgets::{Block, BorderType, Clear, Padding, Widget};
-use ratatui_composable::shelf::Shelf;
+use ratatui_composable::WidgetExt as _;
+use ratatui_composable::shelf::{Shelf, Shelving as _};
 
 use crate::event::ControlMessage;
 use crate::handler::Handler;
@@ -45,12 +47,18 @@ impl Widget for ExitDialog {
 
         Shelf::new(Vertical)
             .flex(Center)
-            .stack(Shelf::new(Horizontal).flex(Center).stack(line))
+            .stack(
+                Length(height),
+                Shelf::new(Horizontal)
+                    .flex(Center)
+                    .stack(Length(width), line),
+            )
             .within_block(
                 Block::bordered()
                     .border_type(BorderType::Double)
                     .padding(Padding::symmetric(2, 1))
                     .style(Style::reset().on_blue()),
             )
+            .render(area, buf);
     }
 }

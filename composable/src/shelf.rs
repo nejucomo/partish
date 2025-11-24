@@ -29,6 +29,16 @@ impl Shelf {
 }
 
 impl shelving::Sealed for Shelf {
+    fn map_layout<F>(self, f: F) -> Self
+    where
+        F: FnOnce(Layout) -> Layout,
+    {
+        Shelf {
+            layout: f(self.layout),
+            constraints: self.constraints,
+        }
+    }
+
     fn append_constraint(&mut self, constraint: Constraint) -> usize {
         let ix = self.constraints.len();
         self.constraints.push(constraint);
