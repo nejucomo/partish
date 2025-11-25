@@ -6,6 +6,7 @@ members = [
   "debug-concise",
   "debug-rollup",
   "stosh",
+  "stream-dispatcher",
   "type-name-concise",
 ]
 
