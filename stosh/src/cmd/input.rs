@@ -5,6 +5,7 @@ use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
 use ratatui::style::Styled as _;
 use ratatui::widgets::{Padding, Widget};
+use ratatui_composable::WidgetExt as _;
 
 use crate::cmd::{Handle, TextArea};
 use crate::cuteblock::CuteBlock;
@@ -52,13 +53,15 @@ impl Widget for &Input {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let st = STYLES.text.histix;
 
-        CuteBlock::bordered()
+        let block = CuteBlock::bordered()
             .title_top(prompt::text(self.histix).set_style(st))
             .title_top(self.cmd_name().set_style(st))
             .border_style(STYLES.border.input.style)
             .border_type(STYLES.border.input.btype)
             .padding(Padding::horizontal(1))
-            .render(area, buf);
+            .into_block();
+
+        (&self.ta).within_block(block).render(area, buf);
     }
 }
 
@@ -83,7 +86,7 @@ impl Handler<Event> for Input {
                     return NoCtrl;
                 };
 
-                if self.height() > 1 {
+                if self.ta.height() > 1 {
                     // When we're already in multi-line mode, we invert the CONTROL meaning
                     send_cmd = !send_cmd;
                 }
