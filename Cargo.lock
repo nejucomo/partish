@@ -1153,6 +1153,11 @@ dependencies = [
 [[package]]
 name = "stream-dispatcher"
 version = "0.1.0"
+dependencies = [
+ "derive-new",
+ "futures",
+ "pin-project",
+]
 
 [[package]]
 name = "strsim"
