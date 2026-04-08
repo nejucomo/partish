@@ -1,17 +1,18 @@
 use crossterm::event::Event::{self, Key};
 use crossterm::event::KeyCode::Enter;
 use crossterm::event::{KeyEvent, KeyModifiers};
-use ratatui::layout::Constraint::{Fill, Length};
-use ratatui::style::{Style, Stylize};
-use ratatui::text::Line;
-use ratatui::widgets::Widget;
-use ratatui_rseq::Renderable;
+use ratatui::buffer::Buffer;
+use ratatui::layout::Rect;
+use ratatui::style::Styled as _;
+use ratatui::widgets::{Padding, Widget};
+use ratatui_composable::WidgetExt as _;
 
 use crate::cmd::{Handle, TextArea};
+use crate::cuteblock::CuteBlock;
 use crate::event::ControlMessage;
 use crate::handler::Handler;
 use crate::prompt;
-use crate::u16util::IntoU16 as _;
+use crate::styles::STYLES;
 
 #[derive(Debug)]
 pub(crate) struct Input {
@@ -21,8 +22,19 @@ pub(crate) struct Input {
 
 impl Input {
     /// The height of the CommandInput
+    #[tracing::instrument]
     pub(crate) fn height(&self) -> usize {
-        self.ta.height()
+        let borders = 2;
+        self.ta.height() + borders
+    }
+
+    fn cmd_name(&self) -> &str {
+        self.ta
+            .lines()
+            .iter()
+            .flat_map(|l| l.split(' '))
+            .find(|w| !w.trim().is_empty())
+            .unwrap_or("•")
     }
 }
 
@@ -30,24 +42,26 @@ impl Default for Input {
     fn default() -> Self {
         Input {
             ta: TextArea::default()
-                .set_cursor_style(Style::default().on_blue())
-                .set_style(Style::default().black().on_gray()),
+                .set_cursor_style(STYLES.text.input)
+                .set_style(STYLES.text.input),
             histix: 0,
         }
     }
 }
 
-impl Renderable for &Input {
-    fn into_widget(self) -> impl Widget {
-        let prompt = Line::from(prompt::text(self.histix).black().on_light_cyan());
-        let pwidth = prompt.width().into_u16();
+impl Widget for &Input {
+    fn render(self, area: Rect, buf: &mut Buffer) {
+        let st = STYLES.text.histix;
 
-        prompt
-            .constrained(Length(pwidth))
-            .on_left()
-            .followed_by(self.ta.constrained(Fill(1)))
-            .horizontal_margin(1)
-            .spacing(1)
+        let block = CuteBlock::bordered()
+            .title_top(prompt::text(self.histix).set_style(st))
+            .title_top(self.cmd_name().set_style(st))
+            .border_style(STYLES.border.input.style)
+            .border_type(STYLES.border.input.btype)
+            .padding(Padding::horizontal(1))
+            .into_block();
+
+        (&self.ta).within_block(block).render(area, buf);
     }
 }
 
@@ -72,7 +86,7 @@ impl Handler<Event> for Input {
                     return NoCtrl;
                 };
 
-                if self.height() > 1 {
+                if self.ta.height() > 1 {
                     // When we're already in multi-line mode, we invert the CONTROL meaning
                     send_cmd = !send_cmd;
                 }

@@ -1,10 +1,14 @@
 use crossterm::event::Event::{self as TerminalEvent, Key};
 use crossterm::event::KeyCode;
-use ratatui::layout::{Constraint, Flex};
+use ratatui::buffer::Buffer;
+use ratatui::layout::Constraint::Length;
+use ratatui::layout::Direction::{Horizontal, Vertical};
+use ratatui::layout::{Flex::Center, Rect};
 use ratatui::style::{Style, Stylize as _};
 use ratatui::text::Line;
 use ratatui::widgets::{Block, BorderType, Clear, Padding, Widget};
-use ratatui_rseq::{Renderable, RenderableSeq as _};
+use ratatui_composable::WidgetExt as _;
+use ratatui_composable::shelf::{Shelf, Shelving as _};
 
 use crate::event::ControlMessage;
 use crate::handler::Handler;
@@ -33,25 +37,28 @@ impl Handler<TerminalEvent> for ExitDialog {
     }
 }
 
-impl Renderable for ExitDialog {
-    fn into_widget(self) -> impl Widget {
+impl Widget for ExitDialog {
+    fn render(self, area: Rect, buf: &mut Buffer) {
         let line = Line::from("Exit? y/n").bold().white();
         let width = (line.width() + 6).into_u16();
         let height = 5;
 
-        (
-            Clear,
-            Block::bordered()
-                .border_type(BorderType::Double)
-                .padding(Padding::symmetric(2, 1))
-                .style(Style::reset().on_blue()),
-        )
-            .then(line)
-            .constrained(Constraint::Length(width))
-            .on_left()
-            .flex(Flex::Center)
-            .constrained(Constraint::Length(height))
-            .on_top()
-            .flex(Flex::Center)
+        Clear.render(area, buf);
+
+        Shelf::new(Vertical)
+            .flex(Center)
+            .stack(
+                Length(height),
+                Shelf::new(Horizontal)
+                    .flex(Center)
+                    .stack(Length(width), line),
+            )
+            .within_block(
+                Block::bordered()
+                    .border_type(BorderType::Double)
+                    .padding(Padding::symmetric(2, 1))
+                    .style(Style::reset().on_blue()),
+            )
+            .render(area, buf);
     }
 }

@@ -2,8 +2,9 @@ use std::collections::VecDeque;
 use std::ffi::OsStr;
 
 use crossterm::event::EventStream;
+use derive_debug::Dbg;
 use futures::{StreamExt as _, stream};
-use ratatui_rseq::TerminalSession;
+use ratatui_composable::TerminalSession;
 use tokio::process::Command;
 use tokio_command_multiplexer::CommandMultiplexer;
 
@@ -12,33 +13,34 @@ use crate::event::{CommandEvent, ControlMessage, InputEvent};
 use crate::handler::Handler;
 use crate::ui::UI;
 
-#[derive(Debug)]
+#[derive(Dbg)]
 struct EventLoop {
-    ui: UI,
+    #[dbg(placeholder = "…")]
     termev: EventStream,
     cmux: CommandMultiplexer<cmd::Handle>,
+    #[dbg(placeholder = "…")]
     inq: VecDeque<InputEvent>,
 }
 
 pub(crate) async fn run() -> std::io::Result<()> {
     let mut evloop = EventLoop {
-        ui: UI::default(),
         termev: EventStream::new(),
         cmux: CommandMultiplexer::default(),
         inq: VecDeque::default(),
     };
 
+    let mut ui = UI::default();
     let mut term = TerminalSession::start()?;
 
-    term.draw(&evloop.ui)?;
+    term.draw(&ui)?;
     while let Some(ev) = evloop.next_event().await? {
-        let ctrlmsg = evloop.ui.handle(ev);
+        let ctrlmsg = ui.handle(ev);
         if matches!(ctrlmsg, ControlMessage::Exit) {
             break;
         } else if let Some(ev) = evloop.handle(ctrlmsg) {
             evloop.inq.push_back(ev);
         }
-        term.draw(&evloop.ui)?;
+        term.draw(&ui)?;
     }
     Ok(())
 }
@@ -58,7 +60,7 @@ impl EventLoop {
             .transpose()
         };
 
-        tracing::debug!(?evres);
+        tracing::trace!(?evres);
         evres
     }
 
@@ -86,7 +88,8 @@ impl Handler<ControlMessage> for EventLoop {
             NoCtrl => None,
             Exit => panic!("Remove this case with the type system."),
             LaunchCommand(h, cmdlines) => {
-                let res = self.parse_and_spawn(h, cmdlines);
+                let cmdwords = cmdlines.iter().flat_map(|line| line.split([' ', '\n']));
+                let res = self.parse_and_spawn(h, cmdwords);
                 Some(CommandEvent::new(h, res).into())
             }
         }
