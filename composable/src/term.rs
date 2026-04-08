@@ -6,7 +6,8 @@ use ratatui::crossterm::event::{
 use ratatui::widgets::Widget;
 use ratatui::{CompletedFrame, DefaultTerminal};
 
-/// Provides [RAII](https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization) access to the terminal alternate screen; dropping causes a reset#[derive(Debug)]
+/// Provides [RAII](https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization) access to the terminal alternate screen; dropping causes a reset
+#[derive(Debug)]
 pub struct TerminalSession(DefaultTerminal);
 
 impl TerminalSession {

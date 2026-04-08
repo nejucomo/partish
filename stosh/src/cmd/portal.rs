@@ -119,7 +119,7 @@ impl Portal {
         let h = height_inner.into();
         let outlen = self.output.len();
         let hinput = self.input.len().clamp(1, h - h.min(outlen));
-        let houtput = outlen.clamp(0, hinput - hinput.min(outlen));
+        let houtput = outlen.min(h.saturating_sub(hinput));
         (hinput, houtput)
     }
 }
@@ -167,6 +167,6 @@ impl Widget for &Portal {
                 })),
         )
         .within_block(block)
-        .render(area, buf);
+        .render(area_outer, buf);
     }
 }
