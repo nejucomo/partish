@@ -2,10 +2,11 @@
 resolver = "3"
 members = [
   "cmux",
+  "composable",
   "debug-concise",
   "debug-rollup",
-  "rseq",
   "stosh",
+  "stream-dispatcher",
   "type-name-concise",
 ]
 
@@ -17,21 +18,22 @@ clap = "4.5.51"
 crossterm = "0.28.1"
 debug-concise = { path = "debug-concise" }
 debug-rollup = { path = "debug-rollup" }
-derive_more = "2.0.1"
 derive-debug = "0.1.2"
 derive-new = "0.7.0"
+derive_more = "2.0.1"
 dirs = "6.0.0"
 either = "1.15.0"
 futures = "0.3.31"
 indoc = "2.0.7"
 pin-project = "1.1.10"
 portable-pty = "0.9.0"
+rat-salsa = "2.5.0"
 ratatui = "0.29.0"
-ratatui-rseq = { path = "rseq" }
+ratatui-composable = { path = "composable" }
 regex = "1.12.2"
-rseq = { path = "rseq" }
 stosh = { path = "stosh" }
 test-case = "3.3.1"
+throbber-widgets-tui = "0.9.0"
 time = "0.3.44"
 tokio = "1.48.0"
 tokio-command-multiplexer = { path = "cmux" }

@@ -1,7 +1,6 @@
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
 use ratatui::widgets::Widget;
-use ratatui_rseq::Renderable;
 
 use crate::cmd;
 use crate::event::CommandEvent;
@@ -9,7 +8,7 @@ use crate::handler::Handler;
 use crate::rectext::RectExt as _;
 use crate::u16util::IntoU16 as _;
 
-#[derive(Debug, Default)]
+#[derive(Default)]
 pub(crate) struct Stack {
     portals: Vec<cmd::Portal>,
 }
@@ -25,12 +24,6 @@ impl Handler<CommandEvent> for Stack {
 
     fn handle(&mut self, ev: CommandEvent) {
         self.portals[ev.handle].handle(ev.info);
-    }
-}
-
-impl Renderable for &Stack {
-    fn into_widget(self) -> impl Widget {
-        self
     }
 }
 
@@ -58,8 +51,14 @@ impl Widget for &Stack {
                 tracing::warn!(?area.height, ?subarea.height, ?remaining.height, "empty areas in stack layout");
             }
 
-            portal.into_widget().render(subarea, buf);
+            portal.render(subarea, buf);
             area = remaining;
         }
+    }
+}
+
+impl std::fmt::Debug for Stack {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Stack<{} portals>", self.portals.len())
     }
 }

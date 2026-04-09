@@ -1,9 +1,10 @@
 use crossterm::event::Event;
 use derive_debug::Dbg;
 use derive_more::{Deref, DerefMut};
+use ratatui::buffer::Buffer;
+use ratatui::layout::Rect;
 use ratatui::style::Style;
 use ratatui::widgets::Widget;
-use ratatui_rseq::Renderable;
 
 use crate::handler::Handler;
 
@@ -66,9 +67,9 @@ where
     }
 }
 
-impl Renderable for &TextArea {
-    fn into_widget(self) -> impl Widget {
-        &self.0
+impl Widget for &TextArea {
+    fn render(self, area: Rect, buf: &mut Buffer) {
+        self.0.render(area, buf);
     }
 }
 

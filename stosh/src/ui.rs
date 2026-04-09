@@ -1,13 +1,14 @@
 use crossterm::event::KeyEvent;
 use crossterm::event::{Event::Key, KeyCode, KeyEventKind::Press};
-use ratatui::style::{Style, Stylize as _};
+use ratatui::buffer::Buffer;
+use ratatui::layout::Rect;
 use ratatui::widgets::{Clear, Widget};
-use ratatui_rseq::{Renderable, RenderableSeq as _};
 
 use crate::event::{ControlMessage, InputEvent};
 use crate::exitdialog::ExitDialog;
 use crate::handler::Handler;
 use crate::mainscreen::MainScreen;
+use crate::styles::STYLES;
 
 #[derive(Debug, Default)]
 pub(crate) struct UI {
@@ -41,11 +42,16 @@ impl Handler<InputEvent> for UI {
     }
 }
 
-impl Renderable for &UI {
-    fn into_widget(self) -> impl Widget {
-        (Clear, Style::reset().gray().on_black())
-            .then(&self.ms)
-            .then(self.exitdialog)
-            .into_widget()
+impl Widget for &UI {
+    fn render(self, area: Rect, buf: &mut Buffer) {
+        Clear.render(area, buf);
+
+        buf.set_style(area, STYLES.text.stdout);
+
+        self.ms.render(area, buf);
+
+        if let Some(ed) = self.exitdialog.as_ref() {
+            ed.render(area, buf);
+        }
     }
 }
